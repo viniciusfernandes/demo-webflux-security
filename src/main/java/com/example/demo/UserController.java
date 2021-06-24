@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/user")
 class UserController {
 
 	@Autowired
@@ -48,7 +46,7 @@ class UserController {
 				}).switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(user)));
 	}
 
-	@GetMapping("/myself")
+	@GetMapping("/user")
 	public Mono<ResponseEntity<User>> getMyself(Principal principal) {
 
 		return Mono.justOrEmpty(users.get(principal.getName())).map(it -> ResponseEntity.ok(new User(it.getEmail())))

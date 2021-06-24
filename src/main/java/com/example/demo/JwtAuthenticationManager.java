@@ -23,14 +23,18 @@ class JwtAuthenticationManager implements ReactiveAuthenticationManager {
 	public Mono<Authentication> authenticate(Authentication authentication) {
 		return Mono.just(authentication).map(auth -> {
 			var credentials = auth.getCredentials();
+
 			var token = credentials != null ? credentials.toString() : null;
+			if (token == null) {
+				return new UsernamePasswordAuthenticationToken(null, null);
+
+			}
 			var jws = jwtSigner.validateJwt(token);
-			auth = new UsernamePasswordAuthenticationToken(jws.getBody().getSubject(), token,
-					Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+			auth = new UsernamePasswordAuthenticationToken(jws.getBody().getSubject(), token );
 			return auth;
 		}).onErrorResume(ex -> {
-			LoggerFactory.getLogger(getClass()).error("Fail to autenticate", ex);
-			return Mono.empty();
+			//LoggerFactory.getLogger(getClass()).error("Fail to autenticate", ex);
+			return Mono.just(new UsernamePasswordAuthenticationToken(null, null));
 		});
 
 	}

@@ -19,9 +19,9 @@ class SecurityConfiguration {
 		var authenticationWebFilter = new AuthenticationWebFilter(jwtAuthenticationManager);
 		authenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter);
 
-		return http.authorizeExchange().pathMatchers("/user/signup").permitAll().pathMatchers("/user/login").permitAll()
+		return http.authorizeExchange().pathMatchers("/signup").permitAll().pathMatchers("/login").permitAll()
 				.pathMatchers("/user").authenticated().and()
-				.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).httpBasic().disable()
+				.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.CORS).httpBasic().disable()
 				.csrf().disable().formLogin().disable().logout().disable().build();
 	}
 }
